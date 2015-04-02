@@ -13,39 +13,42 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
-window.findNRooksSolution = function(n) {
+window.findNRooksSolution = function(n, row) {
   var solution = [];
-  var rowsToGo = n;
+  var count = 0;
 
-  var subroutine = function(rowsToGo, row) {
+  var subroutine = function(n, row) {
     if (row) {
       solution.push(row);
       var board = new Board(solution);
+
       if (board.hasAnyColConflicts()) {
         solution.pop();
         return;
       }
     }
 
+    if (solution.length === n) return;
+
     // Create all the possible variations of placing 1 rook on the row
     // Add each variation to the board and test for column conflicts
     // If there is a conflict, remove the variation and try the next variation
     for (var i = 0; i < n; i++) {
       var arr = [];
+
       for (var j = 0; j < n; j++) {
-        if (j === i) {
-          arr.push(1);
-        } else {
-          arr.push(0);
-        }
+        j === i ? arr.push(1) : arr.push(0);
       }
-      subroutine(rowsToGo-1, arr);
+
+      subroutine(n, arr);
+      count++;
     }
   };
 
-  subroutine(rowsToGo);
+  subroutine(n, row);
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  console.log('Count: ' + count);
   return solution;
 };
 
@@ -53,10 +56,26 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  // iterate over n times
+    // each time, generate a new variation of the row
+    // pass each variation into findNRooksSolution()
+    // store result from findNRooksSolution() in result array
+ // return result.length
+  var solutions = [];
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  for (var i = 0; i < n; i++) {
+    var row = [];
+
+    for (var j = 0; j < n; j++) {
+      j === i ? row.push(1) : row.push(0);
+    }
+
+    console.log('row being passed to findNRooksSolution: ' + row);
+    solutions.push(findNRooksSolution(n, row));
+  }
+
+  console.log('Number of solutions for ' + n + ' rooks:', solutions.length);
+  return solutions.length;
 };
 
 
