@@ -79,12 +79,31 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var totalPieces = this.get(rowIndex).reduce(function(prev, curr) {
+        return prev + curr;
+      }, 0);
+
+      return totalPieces > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      return this.rows().some(function(row, i) {
+        return this.hasRowConflictAt(i);
+      }, this);
+
+      // var rows = this.rows();
+      // var hasConflict = false;
+
+      // for (var i = 0; i < rows.length; i++) {
+      //   if (!hasConflict) {
+      //     hasConflict = this.hasRowConflictAt(i);
+      //   } else {
+      //     return true;
+      //   }
+      // }
+
+      // return hasConflict; // fixme
     },
 
 
@@ -94,12 +113,28 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var rows = this.rows();
+      var col = [];
+      var totalPieces = 0;
+
+      rows.forEach(function(el) {
+        totalPieces += el[colIndex]; //col.push(el[colIndex]);
+      });
+
+      // var totalPieces = col.reduce(function(prev, curr) {
+      //   return prev + curr;
+      // }, 0);
+
+      return totalPieces > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var rows = this.rows();
+
+      return rows.some(function(row, i) {
+        return this.hasColConflictAt(i);
+      }, this);
     },
 
 
@@ -109,12 +144,46 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var rowIndex = majorDiagonalColumnIndexAtFirstRow;
+      var rows = this.rows();
+      var colIndex = 0;
+      var totalPieces = 0;
+
+      //this translates the rowIndex into an index we can use on the table, e.g. rows[rowIndex];
+      if (rowIndex < 0) {
+        rowIndex = -rowIndex; // flip value
+      } else {
+        colIndex = rowIndex;  // if pos, col will always be at the rowIndex
+        rowIndex = 0;
+      }
+
+      for (var i = rowIndex; i < rows.length; i++) {
+        if (colIndex < rows.length) {
+          totalPieces += rows[i][colIndex];
+          colIndex++;
+        }
+      }
+
+      return totalPieces > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var rows = this.rows();
+      var n = this.get('n');
+
+      var range = [];       // arr to store range
+      var start = -(n - 2); // start range
+      var end = -start;     // end range
+
+      //push range values into array
+      for (var i = start; i <= end; i++) {
+        range.push(i);
+      }
+
+      return range.some(function(index) {
+        return this.hasMajorDiagonalConflictAt(index);
+      }, this);
     },
 
 
