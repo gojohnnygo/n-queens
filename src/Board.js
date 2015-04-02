@@ -157,12 +157,20 @@
         rowIndex = 0;
       }
 
-      for (var i = rowIndex; i < rows.length; i++) {
+      rows.forEach(function(row) {
         if (colIndex < rows.length) {
-          totalPieces += rows[i][colIndex];
+          totalPieces += row[colIndex];
           colIndex++;
         }
-      }
+      });
+
+      // repleaced with forEach loop
+      // for (var i = rowIndex; i < rows.length; i++) {
+      //   if (colIndex < rows.length) {
+      //     totalPieces += rows[i][colIndex];
+      //     colIndex++;
+      //   }
+      // }
 
       return totalPieces > 1;
     },
@@ -186,19 +194,57 @@
       }, this);
     },
 
-
-
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var rowIndex = minorDiagonalColumnIndexAtFirstRow;
+      var rows = this.rows();
+      var colIndex = rows.length - 1;
+      var totalPieces = 0;
+
+      if (rowIndex > colIndex) {
+        rowIndex = rowIndex - colIndex;
+      } else {
+        colIndex = rowIndex;
+        rowIndex = 0;
+      }
+
+      rows.forEach(function(row) {
+        if (colIndex >= 0) {
+          totalPieces += row[colIndex];
+          colIndex--;
+        }
+      });
+
+      // for (var i = rowIndex; i < rows.length; i++) {
+      //   if (colIndex >= 0) {
+      //     totalPieces += rows[i][colIndex];
+      //     colIndex--;
+      //   }
+      // }
+
+      return totalPieces > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var rows = this.rows();
+      var n = this.get('n');
+
+      var range = [];       // arr to store range
+      var start = (2 * n) - 3; // start range
+      var end = n - 2;     // end range
+
+      //push range values into array
+      for (var i = start; i >= end; i--) {
+        range.push(i);
+      }
+
+      return range.some(function(index) {
+        return this.hasMinorDiagonalConflictAt(index);
+      }, this);
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
