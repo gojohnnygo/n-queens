@@ -258,9 +258,9 @@
       var rows = this.rows();
       var n = this.get('n');
 
-      var range = [];       // arr to store range
+      var range = [];          // arr to store range
       var start = (2 * n) - 3; // start range
-      var end = n - 2;     // end range
+      var end = 1;             // end range
 
       //push range values into array
       for (var i = start; i >= end; i--) {
