@@ -79,18 +79,35 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      var totalPieces = this.get(rowIndex).reduce(function(prev, curr) {
-        return prev + curr;
-      }, 0);
+      var row = this.get(rowIndex);
+      var count = 0;
 
-      return totalPieces > 1;
+      for( var i = 0; i < row.length; i++ ) {
+        count += row[i];
+      }
+
+      return count > 1;
+      // var totalPieces = this.get(rowIndex).reduce(function(prev, curr) {
+      //   return prev + curr;
+      // }, 0);
+
+      // return totalPieces > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return this.rows().some(function(row, i) {
-        return this.hasRowConflictAt(i);
-      }, this);
+      var size = this.get('n');
+
+      for( var i = 0; i < size; i++ ) {
+        if( this.hasRowConflictAt(i) ) {
+          return true;
+        }
+      }
+
+      return false;
+      // return this.rows().some(function(row, i) {
+      //   return this.hasRowConflictAt(i);
+      // }, this);
 
       // var rows = this.rows();
       // var hasConflict = false;
@@ -113,28 +130,47 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      var rows = this.rows();
-      var col = [];
-      var totalPieces = 0;
+      var size = this.get('n');
+      var count = 0;
 
-      rows.forEach(function(el) {
-        totalPieces += el[colIndex]; //col.push(el[colIndex]);
-      });
+      for( var i = 0; i < size; i++ ) {
+        var row = this.get(i);
+        count += row[colIndex];
+      }
 
-      // var totalPieces = col.reduce(function(prev, curr) {
-      //   return prev + curr;
-      // }, 0);
+      return count > 1;
 
-      return totalPieces > 1;
+      // var rows = this.rows();
+      // var col = [];
+      // var totalPieces = 0;
+
+      // rows.forEach(function(el) {
+      //   totalPieces += el[colIndex]; //col.push(el[colIndex]);
+      // });
+
+      // // var totalPieces = col.reduce(function(prev, curr) {
+      // //   return prev + curr;
+      // // }, 0);
+
+      // return totalPieces > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      var rows = this.rows();
+      var size = this.get('n');
 
-      return rows.some(function(row, i) {
-        return this.hasColConflictAt(i);
-      }, this);
+      for( var i = 0; i < size; i++ ) {
+        if( this.hasColConflictAt(i) ) {
+          return true;
+        }
+      }
+
+      return false;
+      // var rows = this.rows();
+
+      // return rows.some(function(row, i) {
+      //   return this.hasColConflictAt(i);
+      // }, this);
     },
 
 

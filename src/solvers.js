@@ -13,11 +13,18 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
-window.findNRooksSolution = function(n, row) {
-  var solution = [];
+window.findNRooksSolution = function(n, base) {
+  solution = base || [];
   var count = 0;
 
-  var subroutine = function(n, row) {
+  var subroutine = function(n, solution, row) {
+    if (solution.length) {
+      var board = new Board(solution);
+      if (board.hasAnyColConflicts()) {
+        solution.pop();
+        return;
+      }
+    }
     if (row) {
       solution.push(row);
       var board = new Board(solution);
@@ -40,15 +47,15 @@ window.findNRooksSolution = function(n, row) {
         j === i ? arr.push(1) : arr.push(0);
       }
 
-      subroutine(n, arr);
+      subroutine(n, solution, arr);
       count++;
     }
   };
 
-  subroutine(n, row);
+  subroutine(n, solution);
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  console.log('Count: ' + count);
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  // console.log('Count: ' + count);
   return solution;
 };
 
@@ -56,26 +63,29 @@ window.findNRooksSolution = function(n, row) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  // iterate over n times
-    // each time, generate a new variation of the row
-    // pass each variation into findNRooksSolution()
-    // store result from findNRooksSolution() in result array
- // return result.length
-  var solutions = [];
+  var board = new Board({n: n});
+  var counter = 0;
 
-  for (var i = 0; i < n; i++) {
-    var row = [];
-
-    for (var j = 0; j < n; j++) {
-      j === i ? row.push(1) : row.push(0);
+  var getSolutionCount = function(row) {
+    if (row === n) {
+      counter++;
+      return;
     }
 
-    console.log('row being passed to findNRooksSolution: ' + row);
-    solutions.push(findNRooksSolution(n, row));
-  }
+    for (var i = 0; i < n; i++) {
+      board.togglePiece(row, i);
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutions.length);
-  return solutions.length;
+      if (!board.hasAnyRooksConflicts()) {
+        getSolutionCount(row+1);
+      }
+
+      board.togglePiece(row, i);
+    }
+  };
+
+  getSolutionCount(0);
+  console.log('Number of solutions for ' + n + ' rooks:', counter);
+  return counter;
 };
 
 
