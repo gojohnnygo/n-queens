@@ -180,6 +180,10 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      // var colIndex = majorDiagonalColumnIndexAtFirstRow;
+      // var rows = this.rows();
+      // for (var row = -)
+
       var rowIndex = majorDiagonalColumnIndexAtFirstRow;
       var rows = this.rows();
       var colIndex = 0;
@@ -193,20 +197,12 @@
         rowIndex = 0;
       }
 
-      rows.forEach(function(row) {
+      for (var i = rowIndex; i < rows.length; i++) {
         if (colIndex < rows.length) {
-          totalPieces += row[colIndex];
+          totalPieces += rows[i][colIndex];
           colIndex++;
         }
-      });
-
-      // repleaced with forEach loop
-      // for (var i = rowIndex; i < rows.length; i++) {
-      //   if (colIndex < rows.length) {
-      //     totalPieces += rows[i][colIndex];
-      //     colIndex++;
-      //   }
-      // }
+      }
 
       return totalPieces > 1;
     },
@@ -247,19 +243,12 @@
         rowIndex = 0;
       }
 
-      rows.forEach(function(row) {
+      for (var i = rowIndex; i < rows.length; i++) {
         if (colIndex >= 0) {
-          totalPieces += row[colIndex];
+          totalPieces += rows[i][colIndex];
           colIndex--;
         }
-      });
-
-      // for (var i = rowIndex; i < rows.length; i++) {
-      //   if (colIndex >= 0) {
-      //     totalPieces += rows[i][colIndex];
-      //     colIndex--;
-      //   }
-      // }
+      }
 
       return totalPieces > 1;
     },
